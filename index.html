@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crucible Lattice — Supply chain intelligence for specialty chemistry</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 40 40" width="32" height="32">
+        <defs>
+          <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#5eead4"/>
+            <stop offset="100%" stop-color="#6366f1"/>
+          </linearGradient>
+        </defs>
+        <polygon points="20,3 35,12 35,28 20,37 5,28 5,12" fill="none" stroke="url(#lg)" stroke-width="2"/>
+        <polygon points="20,11 29,16 29,24 20,29 11,24 11,16" fill="none" stroke="url(#lg)" stroke-width="1.5" opacity="0.6"/>
+        <circle cx="20" cy="20" r="2.5" fill="url(#lg)"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Crucible Lattice</h1>
+      <p class="tagline">Supply-chain intelligence for specialty chemistry</p>
+    </div>
+  </div>
+  <div class="header-meta">
+    <span class="live-dot"></span>
+    <span>Demo environment</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============================ INPUT ============================ -->
+  <section class="input-panel" id="input-panel">
+    <div class="panel-headline">
+      <h2>From structure to supply chain, in seconds.</h2>
+      <p>Crucible Lattice maps any molecule to a Pareto-optimal set of manufacturing partners — scored across cost, speed, risk, and sustainability, and filtered through the regulatory surface your use case actually faces.</p>
+    </div>
+
+    <div class="example-cards">
+      <button class="example-card" data-example="hypersonic">
+        <span class="chip-tag amber">DEFENSE</span>
+        <h3>Hypersonic coating precursor</h3>
+        <p class="ex-compound">PTMS-X7 · C₉H₁₄O₃Si</p>
+        <p class="ex-usecase">Thermal barrier coating for hypersonic vehicle leading edges. 500 kg/mo, 18-mo timeline.</p>
+        <span class="ex-cta">Load inputs <span class="cta-arrow">→</span></span>
+      </button>
+      <button class="example-card" data-example="drug">
+        <span class="chip-tag cyan">PHARMA</span>
+        <h3>Small-molecule drug candidate</h3>
+        <p class="ex-compound">CL-2847 · C₁₄H₁₀FN₃O</p>
+        <p class="ex-usecase">Phase-I Nav1.8 inhibitor for non-opioid pain. 25 kg clinical supply, 9-mo to GMP release.</p>
+        <span class="ex-cta">Load inputs <span class="cta-arrow">→</span></span>
+      </button>
+      <button class="example-card" data-example="lubricant">
+        <span class="chip-tag green">INDUSTRIAL</span>
+        <h3>Synthetic lubricant base stock</h3>
+        <p class="ex-compound">PE-4EH · C₃₇H₆₈O₈</p>
+        <p class="ex-usecase">Wind-turbine gearbox ester. 12,000 t/year, VI &gt;140, biodegradable per OECD 301B.</p>
+        <span class="ex-cta">Load inputs <span class="cta-arrow">→</span></span>
+      </button>
+    </div>
+
+    <div class="input-grid" data-locked title="Select from Examples">
+      <label class="field field-wide">
+        <span class="field-label">Compound <small>(SMILES notation)</small></span>
+        <input id="f-smiles" type="text" placeholder="Select an example above" readonly tabindex="-1" />
+      </label>
+      <label class="field">
+        <span class="field-label">Project name</span>
+        <input id="f-name" type="text" placeholder="—" readonly tabindex="-1" />
+      </label>
+      <label class="field field-wide">
+        <span class="field-label">Intended use case</span>
+        <textarea id="f-usecase" rows="2" placeholder="—" readonly tabindex="-1"></textarea>
+      </label>
+      <label class="field">
+        <span class="field-label">Expected quantity</span>
+        <input id="f-quantity" type="text" placeholder="—" readonly tabindex="-1" />
+      </label>
+      <label class="field">
+        <span class="field-label">Timeline</span>
+        <input id="f-timeline" type="text" placeholder="—" readonly tabindex="-1" />
+      </label>
+    </div>
+
+    <div class="input-footer">
+      <div class="input-reassurance">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/></svg>
+        Structures are encrypted on upload — partners only see capability requirements, never your molecule.
+      </div>
+      <button id="analyze-btn" class="cta-btn" disabled>
+        Run lattice analysis
+        <span class="cta-arrow">→</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ========================== WORKFLOW ============================ -->
+  <section class="workflow-panel" id="workflow-panel" hidden>
+    <div class="workflow-header">
+      <div class="workflow-pulse"><span></span><span></span><span></span></div>
+      <div>
+        <h3 id="workflow-title">Analyzing your compound</h3>
+        <p id="workflow-subtitle">Engaging the lattice — querying capability graph across 2,400+ qualified partners</p>
+      </div>
+    </div>
+    <ol class="stages" id="stages"></ol>
+  </section>
+
+  <!-- ============================ RESULTS =========================== -->
+  <section class="results" id="results" hidden>
+
+    <!-- Identity card -->
+    <div class="results-header">
+      <div class="molecule-card">
+        <div class="molecule-render" id="molecule-render">
+          <div class="render-placeholder">Rendering structure…</div>
+        </div>
+        <div class="molecule-meta">
+          <div class="tag-row" id="id-tag-row"></div>
+          <h2 id="id-name">—</h2>
+          <p class="id-classification" id="id-classification">—</p>
+          <dl class="id-facts">
+            <div><dt>Formula</dt><dd id="id-formula">—</dd></div>
+            <div><dt>Molecular weight</dt><dd id="id-mw">—</dd></div>
+            <div><dt>State</dt><dd id="id-state">—</dd></div>
+            <div><dt>Use case</dt><dd id="id-usecase">—</dd></div>
+            <div><dt>Target volume</dt><dd id="id-qty">—</dd></div>
+            <div><dt>Timeline</dt><dd id="id-timeline">—</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optimization alert -->
+    <div class="optimization-alert" id="optimization-alert" hidden>
+      <div class="opt-header">
+        <div class="opt-icon">✦</div>
+        <div>
+          <h3 id="opt-title">Optimization Potential Detected</h3>
+          <p id="opt-finding">—</p>
+        </div>
+      </div>
+      <p class="opt-suggestion" id="opt-suggestion">—</p>
+      <div class="opt-impact" id="opt-impact"></div>
+      <button class="opt-cta" id="opt-cta">—</button>
+    </div>
+
+    <!-- Regulatory + Hazard + Purity -->
+    <div class="compliance-grid">
+      <div class="panel">
+        <h3 class="panel-title">Regulatory surface</h3>
+        <ul class="reg-list" id="reg-list"></ul>
+      </div>
+      <div class="panel">
+        <h3 class="panel-title">Hazard profile</h3>
+        <p class="hazard-summary" id="hazard-summary">—</p>
+        <div class="hazard-flags" id="hazard-flags"></div>
+      </div>
+      <div class="panel">
+        <h3 class="panel-title">Purity ladder</h3>
+        <table class="purity-table">
+          <thead><tr><th>Scale</th><th>Target</th><th>Analytical method</th></tr></thead>
+          <tbody id="purity-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Scenarios -->
+    <div class="section-header">
+      <h3>Supply-chain scenarios</h3>
+      <p>Four optimized configurations across the cost / speed / risk / sustainability Pareto front.</p>
+    </div>
+    <div class="scenarios" id="scenarios"></div>
+
+    <!-- What-if slider -->
+    <div class="panel whatif-panel">
+      <div class="whatif-header">
+        <div>
+          <h3 class="panel-title">What if you changed scale?</h3>
+          <p class="muted">Drag to see which partners drop in or out.</p>
+        </div>
+        <div class="whatif-readout" id="whatif-readout">—</div>
+      </div>
+      <input type="range" id="whatif-slider" min="0" max="100" value="50" />
+      <div class="whatif-marks">
+        <span>Bench (g)</span>
+        <span>Pilot (kg)</span>
+        <span>Commercial (t)</span>
+      </div>
+      <div class="whatif-result" id="whatif-result"></div>
+    </div>
+
+    <!-- Network map -->
+    <div class="panel">
+      <h3 class="panel-title">Partner network</h3>
+      <p class="panel-caption muted" id="map-caption">—</p>
+      <div class="network-map" id="network-map"></div>
+      <div class="legend">
+        <span class="legend-dot tier-1"></span> Tier 1 — in final mix
+        <span class="legend-dot tier-2"></span> Tier 2 — specialty option
+        <span class="legend-dot tier-3"></span> Filtered — did not meet constraints
+      </div>
+    </div>
+
+    <!-- Flywheel -->
+    <div class="flywheel-panel">
+      <h3>Every transaction makes the lattice smarter.</h3>
+      <p class="flywheel-sub">Live learning from <strong id="fw-txn">18,442</strong> prior transactions tightens cost, lead-time, and risk estimates on every run.</p>
+      <div class="flywheel-stats">
+        <div class="fw-stat"><div class="fw-num" id="fw-stat-1">−14%</div><div class="fw-lbl">Avg cost delta vs. initial quote</div></div>
+        <div class="fw-stat"><div class="fw-num" id="fw-stat-2">−22%</div><div class="fw-lbl">Avg lead-time delta vs. initial estimate</div></div>
+        <div class="fw-stat"><div class="fw-num" id="fw-stat-3">97.4%</div><div class="fw-lbl">On-time handoff rate across lattice</div></div>
+        <div class="fw-stat"><div class="fw-num" id="fw-stat-4">2,413</div><div class="fw-lbl">Qualified partners in capability graph</div></div>
+      </div>
+    </div>
+
+    <div class="results-footer">
+      <button id="reset-btn" class="ghost-btn">← Analyze another compound</button>
+      <button id="execute-btn" class="cta-btn">
+        Begin supply-chain execution
+        <span class="cta-arrow">→</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ========================= EXECUTION ========================== -->
+  <section class="execution" id="execution" hidden>
+
+    <div class="execution-header">
+      <div class="execution-breadcrumb">
+        <a href="#" id="exec-back-link" style="color: var(--text-dim); text-decoration: none; cursor: pointer;">← Back to analysis</a>
+      </div>
+      <h2>Supply-chain execution</h2>
+      <p class="execution-subtitle">Project management view — Crucible co-managing your manufacturing relationship</p>
+    </div>
+
+    <!-- Project identity card (mini version) -->
+    <div class="execution-project-card">
+      <div class="exec-mol-render" id="exec-mol-render"></div>
+      <div class="exec-project-info">
+        <h3 id="exec-project-name">—</h3>
+        <p class="exec-use-case" id="exec-use-case">—</p>
+        <div class="exec-meta">
+          <div><strong>Lead partner:</strong> <span id="exec-lead-partner">—</span></div>
+          <div><strong>Timeline:</strong> <span id="exec-timeline">—</span></div>
+          <div><strong>Est. cost:</strong> <span id="exec-cost">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project timeline -->
+    <div class="panel">
+      <h3 class="panel-title">Execution roadmap</h3>
+      <ol class="execution-timeline" id="execution-timeline"></ol>
+    </div>
+
+    <!-- Project lead -->
+    <div class="panel">
+      <h3 class="panel-title">Your Crucible team</h3>
+      <div class="exec-team-card">
+        <div class="exec-team-avatar">CS</div>
+        <div>
+          <h4>Charlotte Shaw</h4>
+          <p class="exec-team-role">Supply Chain Operations Lead</p>
+          <p class="exec-team-bio">15 years in specialty chem manufacturing. Ex-Evonik, ex-Cabot. Knows every partner in our lattice.</p>
+          <button class="ghost-btn" style="margin-top: 0.75rem;">Schedule kickoff call</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="execution-footer">
+      <button id="exec-reset-btn" class="ghost-btn">← Back to analysis</button>
+    </div>
+  </section>
+
+</main>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
