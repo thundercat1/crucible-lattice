@@ -43,7 +43,7 @@
   <section class="input-panel" id="input-panel">
     <div class="panel-headline">
       <h2>From structure to supply chain, in seconds.</h2>
-      <p>Crucible Lattice maps any molecule to a Pareto-optimal set of manufacturing partners — scored across cost, speed, risk, and sustainability, and filtered through the regulatory surface your use case actually faces.</p>
+      <p>$600B specialty chemicals market. Procurement still runs on email, NDAs, and six-week RFQ cycles. Crucible Lattice maps any molecule to a Pareto-optimal set of manufacturing partners — scored across cost, speed, risk, and sustainability, and filtered through the regulatory surface your use case actually faces.</p>
     </div>
 
     <div class="example-cards">
@@ -120,17 +120,6 @@
   <!-- ============================ RESULTS =========================== -->
   <section class="results" id="results" hidden>
 
-    <!-- Geopolitical disruption banner -->
-    <div class="geopolitical-alert" id="geopolitical-alert" hidden>
-      <div class="geo-icon">⚠</div>
-      <div class="geo-content">
-        <div class="geo-event" id="geo-event">—</div>
-        <div class="geo-impact" id="geo-impact">—</div>
-        <div class="geo-reroute" id="geo-reroute">—</div>
-      </div>
-      <div class="geo-badge" id="geo-badge">DISRUPTION DETECTED</div>
-    </div>
-
     <!-- Identity card -->
     <div class="results-header">
       <div class="molecule-card">
@@ -153,7 +142,7 @@
       </div>
     </div>
 
-    <!-- Optimization alert -->
+    <!-- Optimization alert — lead with AI value -->
     <div class="optimization-alert" id="optimization-alert" hidden>
       <div class="opt-header">
         <div class="opt-icon">✦</div>
@@ -166,6 +155,37 @@
       <div class="opt-impact" id="opt-impact"></div>
       <div class="opt-categories" id="opt-categories"></div>
       <button class="opt-cta" id="opt-cta">—</button>
+    </div>
+
+    <!-- Geopolitical disruption banner -->
+    <div class="geopolitical-alert" id="geopolitical-alert" hidden>
+      <div class="geo-icon">⚠</div>
+      <div class="geo-content">
+        <div class="geo-event" id="geo-event">—</div>
+        <div class="geo-impact" id="geo-impact">—</div>
+        <div class="geo-reroute" id="geo-reroute">—</div>
+      </div>
+      <div class="geo-badge" id="geo-badge">DISRUPTION DETECTED</div>
+    </div>
+
+    <!-- Scenarios -->
+    <div class="section-header">
+      <h3>Supply-chain scenarios</h3>
+      <p>Four Pareto-optimal configurations across cost / speed / risk / sustainability. Hover to preview partner networks; click to select and proceed to execution.</p>
+    </div>
+    <div class="scenarios" id="scenarios"></div>
+
+    <!-- Network map -->
+    <div class="panel network-panel">
+      <h3 class="panel-title">Partner network</h3>
+      <p class="panel-caption muted" id="map-caption">—</p>
+      <div class="network-map" id="network-map"></div>
+      <div class="legend">
+        <span class="legend-dot tier-1"></span> Tier 1 — in final mix
+        <span class="legend-dot tier-2"></span> Tier 2 — specialty option
+        <span class="legend-dot tier-3"></span> Filtered — did not meet constraints
+        <span class="legend-dot geo-risk"></span> Geopolitical disruption risk
+      </div>
     </div>
 
     <!-- Regulatory + Hazard -->
@@ -188,33 +208,13 @@
     </div>
     <div class="purity-cards" id="purity-cards"></div>
 
-    <!-- Scenarios -->
-    <div class="section-header">
-      <h3>Supply-chain scenarios</h3>
-      <p>Four optimized configurations across the cost / speed / risk / sustainability Pareto front.</p>
-    </div>
-    <div class="scenarios" id="scenarios"></div>
-
-    <!-- Network map -->
-    <div class="panel network-panel">
-      <h3 class="panel-title">Partner network</h3>
-      <p class="panel-caption muted" id="map-caption">—</p>
-      <div class="network-map" id="network-map"></div>
-      <div class="legend">
-        <span class="legend-dot tier-1"></span> Tier 1 — in final mix
-        <span class="legend-dot tier-2"></span> Tier 2 — specialty option
-        <span class="legend-dot tier-3"></span> Filtered — did not meet constraints
-        <span class="legend-dot geo-risk"></span> Geopolitical disruption risk
-      </div>
-    </div>
-
     <!-- Flywheel -->
     <div class="flywheel-panel">
       <h3>Every transaction makes the lattice smarter.</h3>
-      <p class="flywheel-sub">Live learning from <strong id="fw-txn">18,442</strong> prior transactions tightens cost, lead-time, and risk estimates on every run.</p>
+      <p class="flywheel-sub">Live learning from <strong id="fw-txn">18,442</strong> prior transactions tightens cost, lead-time, and risk estimates on every run. Building this partner network from scratch — qualification visits, NDA execution, capability audits — takes 3–4 years. It is now queryable in milliseconds.</p>
       <div class="flywheel-stats">
-        <div class="fw-stat"><div class="fw-num" id="fw-stat-1">−14%</div><div class="fw-lbl">Avg cost reduction vs. baseline RFQ</div></div>
-        <div class="fw-stat"><div class="fw-num" id="fw-stat-2">3.2</div><div class="fw-lbl">Competitive bids per sourcing event</div></div>
+        <div class="fw-stat"><div class="fw-num" id="fw-stat-1">−14%</div><div class="fw-lbl">Avg cost reduction vs. open-market RFQ</div></div>
+        <div class="fw-stat"><div class="fw-num" id="fw-stat-2">48 hrs</div><div class="fw-lbl">Median structure-to-shortlist (manual RFQ: 6–14 weeks)</div></div>
         <div class="fw-stat"><div class="fw-num" id="fw-stat-3">96.8%</div><div class="fw-lbl">On-spec delivery, first shipment</div></div>
         <div class="fw-stat"><div class="fw-num" id="fw-stat-4">2,413</div><div class="fw-lbl">Qualified partners · 7 capability classes</div></div>
       </div>
@@ -237,7 +237,7 @@
         <a href="#" id="exec-back-link" style="color: var(--text-dim); text-decoration: none; cursor: pointer;">← Back to analysis</a>
       </div>
       <h2>Supply-chain execution</h2>
-      <p class="execution-subtitle">Project management view — Crucible co-managing your manufacturing relationship</p>
+      <p class="execution-subtitle">Automated to shortlist. Human-verified to contract. Crucible coordinates the full manufacturing relationship.</p>
     </div>
 
     <!-- Project identity card (mini version) -->
@@ -268,7 +268,7 @@
         <div>
           <h4>Charlotte Shaw</h4>
           <p class="exec-team-role">Supply Chain Operations Lead</p>
-          <p class="exec-team-bio">15 years in specialty chem manufacturing. Ex-Evonik, ex-Cabot. Knows every partner in our lattice.</p>
+          <p class="exec-team-bio">15 years in specialty chem manufacturing. Ex-Evonik, ex-Cabot. AI surfaces the options; Charlotte closes the contracts. Every transaction is human-verified before commitment.</p>
           <button class="ghost-btn" style="margin-top: 0.75rem;">Schedule kickoff call</button>
         </div>
       </div>

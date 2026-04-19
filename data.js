@@ -74,7 +74,7 @@ const EXAMPLES = {
         costPerKg: '$303',
         leadTime: '14 weeks',
         partnerCount: 4,
-        highlight: 'Direct feedstock from domestic silicon producer',
+        highlight: 'Direct feedstock from domestic silicon producer. ITAR enforcement insulates this program from all global supply disruptions.',
         radar: { cost: 92, speed: 68, risk: 55, sustainability: 48, scalability: 72 },
         partners: ['Orogen Silicates (feedstock)', 'Nuada Specialty Chem (synthesis)', 'Basilisk Fine Chem (purification)', 'Arcline Logistics (ITAR-cleared transport)'],
       },
@@ -113,7 +113,7 @@ const EXAMPLES = {
         costPerKg: '$438',
         leadTime: '12 weeks',
         partnerCount: 5,
-        highlight: 'Dual-source every critical node, 2× ITAR-cleared facilities',
+        highlight: 'Dual-source every critical node; 2× DDTC-registered facilities. Zero single points of failure across the 18-month production run.',
         radar: { cost: 52, speed: 72, risk: 95, sustainability: 55, scalability: 88 },
         partners: ['Orogen Silicates (primary)', 'Meridian Silanes (secondary)', 'Nuada Specialty Chem', 'Basilisk Fine Chem (redundant purification)', 'Arcline Logistics'],
       },
@@ -180,6 +180,7 @@ const EXAMPLES = {
         { metric: 'Cost / kg API',   from: '$4,820',  to: '$2,890', delta: '−40 %' },
         { metric: 'E-factor',        from: '148',     to: '71',     delta: '−52 %' },
         { metric: 'REACH flags',     from: '2',       to: '0',      delta: 'cleared' },
+        { metric: 'Est. savings (25 kg)', from: '$120,500', to: '$72,250', delta: '−$48,250' },
       ],
       cta: 'Engage Crucible chemistry team to co-develop revised step-3 protocol (NDA + JDA template available; est. 8-week process development study at Helvetia GMP).',
       categoriesSearched: [
@@ -324,8 +325,8 @@ const EXAMPLES = {
     },
     geopoliticalAlert: {
       event: 'Strait of Hormuz closure — Iranian naval interdiction (April 2026)',
-      impact: 'Primary 2-EH precursor route via Persian Gulf disrupted. 2 of 6 tier-1 partners source through affected lanes.',
-      reroute: 'Alternate sourcing confirmed: Helvetia Esters (EU) fully unaffected. Gulfstar Oleochem holds 90-day domestic buffer stock. Bio-feedstock route (Mycelia Bio-Alcohols) is entirely geopolitical-risk-free.',
+      impact: 'Primary 2-EH precursor route via Persian Gulf disrupted. 2 of 6 tier-1 partners on affected corridor — representing 38% of planned annual production capacity. Without rerouting: est. 11–16 week delay; Cape of Good Hope detour adds ~$1.1M/year incremental freight.',
+      reroute: 'Confirmed alternatives: Helvetia Esters (EU) fully unaffected; Gulfstar holds 90-day domestic buffer stock. Bio-feedstock route (Mycelia Bio-Alcohols) is entirely geopolitical-risk-free — select Green Ridge to eliminate Persian Gulf exposure entirely.',
       severity: 'warning',
     },
     scenarios: [
