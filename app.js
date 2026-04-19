@@ -131,7 +131,7 @@ function renderExecution(scenario) {
     { title: 'Tooling & process optimization', detail: 'Equipment setup, parameter tuning, batch sizing', owner: scenario.partners[0] || 'Partner', timeline: '3–4 weeks', status: 'pending' },
     { title: 'Manufacturing run', detail: 'Full-scale production, real-time monitoring', owner: scenario.partners[0] || 'Partner', timeline: 'Variable', status: 'pending' },
     { title: 'QC release & final testing', detail: 'COA generation, analytical validation, regulatory sign-off', owner: 'QC Lab', timeline: '1–2 weeks', status: 'pending' },
-    { title: 'Delivery & handoff', detail: 'Logistics, documentation, supply-chain closure', owner: 'Crucible logistics', timeline: 'On-time rate: 97.4%', status: 'pending' },
+    { title: 'Delivery & handoff', detail: 'Logistics, documentation, supply-chain closure', owner: 'Crucible logistics', timeline: 'On-spec delivery rate: 96.8%', status: 'pending' },
   ];
 
   $('execution-timeline').innerHTML = timeline.map((step, i) => `

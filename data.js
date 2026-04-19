@@ -25,7 +25,7 @@ const EXAMPLES = {
     regulatory: [
       { label: 'REACH (EU)', status: 'pass', note: 'Registered; no SVHC' },
       { label: 'TSCA (US)', status: 'pass', note: 'Listed on inventory' },
-      { label: 'ITAR / EAR', status: 'flag', note: 'Defense end-use detected — US-domestic supply chain enforced, no foreign partners surfaced' },
+      { label: 'ITAR / EAR', status: 'flag', note: 'Defense end-use detected — US-domestic supply chain enforced. All surfaced partners verified: DDTC-registered, empowered official on file, no current debarments. Manufacturing license agreement review required before production authorization.' },
       { label: 'DEA Schedule', status: 'na', note: 'Not a controlled substance' },
       { label: 'DoD Qualification', status: 'pass', note: 'Compatible with MIL-STD-883 test methods' },
     ],
@@ -119,7 +119,7 @@ const EXAMPLES = {
       },
     ],
     map: {
-      caption: '11 qualified partners screened · 4 pass ITAR gate · all US-domestic',
+      caption: '11 in capability graph · 7 US-domestic · 4 DDTC-registered · 3 with active manufacturing license',
       nodes: [
         { x: 22, y: 58, name: 'Orogen Silicates',   role: 'Feedstock',   active: true,  tier: 1 },
         { x: 35, y: 42, name: 'Meridian Silanes',   role: 'Feedstock',   active: true,  tier: 2 },
@@ -156,7 +156,7 @@ const EXAMPLES = {
     },
     regulatory: [
       { label: 'ICH Q7 (cGMP API)', status: 'pass', note: 'Route compatible with ICH Q7; QbD documentation required' },
-      { label: 'FDA DMF', status: 'flag', note: 'Type II DMF filing needed prior to Ph II — auto-queued' },
+      { label: 'FDA DMF', status: 'flag', note: 'Type II DMF filing required prior to Ph II. Filing package generation and responsible-party designation available on request.' },
       { label: 'REACH (EU)', status: 'pass', note: 'Under clinical-use exemption' },
       { label: 'DEA Schedule', status: 'na', note: 'Non-scheduled' },
       { label: 'Genotoxic impurities', status: 'pass', note: 'No ICH M7 Class 1–2 alerts in route' },
@@ -172,16 +172,16 @@ const EXAMPLES = {
     ],
     optimization: {
       severity: 'high',
-      title: 'Optimization Potential Detected',
-      finding: 'Step-3 fluorination uses Selectfluor at 0 °C (34 % yield, REACH-restricted solvent DMF).',
-      suggestion: 'Replace 4-fluoroaniline coupling partner with 4-chloro analog → swap to late-stage Pd-catalyzed C–F via Balz-Schiemann variant.',
+      title: 'Step-3 Fluorination Bottleneck Identified',
+      finding: 'Step-3 electrophilic fluorination (Selectfluor, 0 °C, DMF solvent) is the yield-limiting step at 34 % and contributes both REACH-restricted solvent flags. Downstream steps are not constrained. Target compound and IND scope unchanged by route modification.',
+      suggestion: 'DAST-mediated fluorination of a masked α-hydroxy ketone intermediate eliminates Selectfluor and DMF entirely. In-line deprotection restores the indazole carboxamide target. Route validated to pilot scale in analogous series (ref. J. Org. Chem. 2022, 87, 4411).',
       impact: [
-        { metric: 'Overall yield',   from: '34 %',  to: '71 %',  delta: '+109 %' },
-        { metric: 'Cost / kg API',   from: '$4,820', to: '$2,110', delta: '−56 %' },
-        { metric: 'E-factor',        from: '148',  to: '62',   delta: '−58 %' },
-        { metric: 'REACH flags',     from: '2',    to: '0',    delta: 'cleared' },
+        { metric: 'Step-3 yield',    from: '34 %',   to: '52 %',   delta: '+53 %' },
+        { metric: 'Cost / kg API',   from: '$4,820',  to: '$2,890', delta: '−40 %' },
+        { metric: 'E-factor',        from: '148',     to: '71',     delta: '−52 %' },
+        { metric: 'REACH flags',     from: '2',       to: '0',      delta: 'cleared' },
       ],
-      cta: 'Engage Crucible chemistry team to co-develop revised route (NDA + JDA template available).',
+      cta: 'Engage Crucible chemistry team to co-develop revised step-3 protocol (NDA + JDA template available; est. 8-week process development study at Helvetia GMP).',
       categoriesSearched: [
         { label: 'Route alternatives', found: true },
         { label: 'Solvent substitution', found: true },
@@ -189,6 +189,12 @@ const EXAMPLES = {
         { label: 'Biocatalytic options', found: false },
         { label: 'Yield optimization', found: true },
       ],
+    },
+    geopoliticalAlert: {
+      event: 'Strait of Hormuz closure — Iranian naval interdiction (April 2026)',
+      impact: 'Geopolitical screen complete. No CL-2847 precursors or reagents route through Persian Gulf lanes.',
+      reroute: 'India-based API synthesis (South Asia corridor) and Swiss integrated CDMO confirmed unaffected. All key starting material sources clear. Supply chain status: nominal.',
+      severity: 'clear',
     },
     scenarios: [
       {
@@ -245,7 +251,7 @@ const EXAMPLES = {
       },
     ],
     map: {
-      caption: '18 cGMP-qualified partners screened · 6 match API class · 4 pass genotox gate',
+      caption: '18 in capability graph · 6 match indazole API class · 4 with active cGMP certification · 3 available within 9-month window',
       nodes: [
         { x: 20, y: 48, name: 'Sarna Pharma',    role: 'API Synth',    active: true,  tier: 1 },
         { x: 35, y: 62, name: 'Veridia Inter.',  role: 'Intermediate', active: true,  tier: 1 },
