@@ -41,6 +41,18 @@ function clearFields() {
   analyzeBtn.classList.remove('ready');
 }
 
+function resetToHome() {
+  workflowPanel.hidden = true;
+  resultsPanel.hidden = true;
+  executionPanel.hidden = true;
+  inputPanel.hidden = false;
+  clearFields();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Brand logo → home
+$('brand-home-btn').addEventListener('click', resetToHome);
+
 document.querySelectorAll('.example-card').forEach((btn) => {
   btn.addEventListener('click', () => {
     const ex = EXAMPLES[btn.dataset.example];
@@ -147,6 +159,9 @@ function renderExecution(scenario) {
 }
 
 // ---------- Workflow animation ----------
+// Stages that run 2× longer to build suspense (0-indexed)
+const LONG_STAGES = new Set([2, 4, 5]);
+
 function runWorkflow(input, payload) {
   inputPanel.hidden = true;
   workflowPanel.hidden = false;
@@ -176,7 +191,7 @@ function runWorkflow(input, payload) {
     }
     if (i >= total) { finishWorkflow(input, payload); return; }
     stageEls[i].classList.add('active');
-    const dur = 450 + Math.random() * 650;
+    const base = LONG_STAGES.has(i) ? 1800 + Math.random() * 900 : 450 + Math.random() * 550;
     const startedAt = performance.now();
     const timingEl = stageEls[i].querySelector('[data-timing]');
     const tick = () => {
@@ -185,7 +200,7 @@ function runWorkflow(input, payload) {
       if (stageEls[i] && stageEls[i].classList.contains('active')) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
-    setTimeout(() => { i++; nextStage(); }, dur);
+    setTimeout(() => { i++; nextStage(); }, base);
   }
   nextStage();
 }
@@ -206,13 +221,27 @@ function finishWorkflow(input, payload) {
 function renderResults(input, payload) {
   renderMolecule(input.smiles);
   renderIdentity(input, payload);
+  renderGeopolitical(payload);
   renderOptimization(payload);
   renderRegulatory(payload);
   renderHazard(payload);
   renderPurity(payload);
   renderScenarios(payload);
-  renderWhatIf(payload);
-  renderMap(payload);
+  renderMap(payload, null);
+}
+
+// ---------- Molecule (RDKit) — dark theme ----------
+function themeRdkitSvg(svg) {
+  return svg
+    // Remove white/light background fill
+    .replace(/fill:\s*#(?:FFFFFF|ffffff|fff|FFF)/g, 'fill:none')
+    .replace(/fill="(?:#FFFFFF|#ffffff|#fff|#FFF|white)"/g, 'fill="none"')
+    // Black bonds/strokes → cyan accent
+    .replace(/stroke:\s*#(?:000000|000)/g, 'stroke:#5eead4')
+    .replace(/stroke="(?:#000000|#000|black)"/g, 'stroke="#5eead4"')
+    // Black atom fill → light text
+    .replace(/fill:\s*#(?:000000|000)/g, 'fill:#e6ecf5')
+    .replace(/fill="(?:#000000|#000|black)"/g, 'fill="#e6ecf5"');
 }
 
 function renderMolecule(smiles) {
@@ -223,9 +252,10 @@ function renderMolecule(smiles) {
     try {
       const mol = RDKit.get_mol(smiles);
       if (!mol) throw new Error('parse failed');
-      const svg = mol.get_svg(440, 280);
-      el.innerHTML = svg;
+      const rawSvg = mol.get_svg(420, 260);
       mol.delete();
+      const themedSvg = themeRdkitSvg(rawSvg);
+      el.innerHTML = `<div class="mol-svg-wrap">${themedSvg}</div>`;
     } catch (e) {
       el.innerHTML = '<div class="render-placeholder">Structure preview unavailable for this SMILES.</div>';
     }
@@ -248,6 +278,29 @@ function renderIdentity(input, payload) {
   $('id-timeline').textContent       = input.timeline;
 }
 
+// ---------- Geopolitical alert ----------
+function renderGeopolitical(payload) {
+  const box = $('geopolitical-alert');
+  if (!payload.geopoliticalAlert) { box.hidden = true; return; }
+  const geo = payload.geopoliticalAlert;
+  box.hidden = false;
+  box.dataset.severity = geo.severity;
+  $('geo-event').textContent  = geo.event;
+  $('geo-impact').textContent = geo.impact;
+  $('geo-reroute').textContent = geo.reroute;
+  const badge = $('geo-badge');
+  if (geo.severity === 'clear') {
+    badge.textContent = 'SUPPLY CHAIN NOMINAL';
+    box.classList.add('geo-clear');
+    box.classList.remove('geo-warning');
+  } else {
+    badge.textContent = 'GLOBAL DISRUPTION DETECTED';
+    box.classList.add('geo-warning');
+    box.classList.remove('geo-clear');
+  }
+}
+
+// ---------- Optimization ----------
 function renderOptimization(payload) {
   const box = $('optimization-alert');
   if (!payload.optimization) { box.hidden = true; return; }
@@ -268,6 +321,25 @@ function renderOptimization(payload) {
       <div class="opt-metric-delta">${m.delta}</div>
     </div>
   `).join('');
+
+  // Categories searched
+  const catEl = $('opt-categories');
+  if (opt.categoriesSearched && opt.categoriesSearched.length) {
+    catEl.innerHTML = `
+      <div class="opt-cat-label">Categories analyzed</div>
+      <div class="opt-cat-grid">
+        ${opt.categoriesSearched.map((c) => `
+          <div class="opt-cat-item ${c.found ? 'found' : 'empty'}">
+            <span class="opt-cat-icon">${c.found ? '✓' : '—'}</span>
+            <span class="opt-cat-name">${c.label}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    catEl.hidden = false;
+  } else {
+    catEl.hidden = true;
+  }
 }
 
 function renderRegulatory(payload) {
@@ -289,23 +361,35 @@ function renderHazard(payload) {
     .map((f) => `<span class="hazard-flag">${f}</span>`).join('');
 }
 
+// ---------- Purity escalation ladder (cards) ----------
 function renderPurity(payload) {
-  $('purity-body').innerHTML = payload.purity.map((p) => `
-    <tr>
-      <td class="purity-scale">${p.scale}</td>
-      <td>${p.target}</td>
-      <td class="purity-method">${p.method}</td>
-    </tr>
+  const container = $('purity-cards');
+  container.innerHTML = payload.purity.map((p, i) => `
+    <button class="purity-card ${i === 0 ? 'selected' : ''}" data-purity="${i}">
+      <div class="purity-card-scale">${p.scale}</div>
+      <div class="purity-card-target">${p.target}</div>
+      <div class="purity-card-method">${p.method}</div>
+    </button>
   `).join('');
+
+  container.querySelectorAll('.purity-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      container.querySelectorAll('.purity-card').forEach((c) => c.classList.remove('selected'));
+      card.classList.add('selected');
+    });
+  });
 }
 
-// ----- Scenarios w/ SVG radar chart -----
+// ---------- Scenarios with SVG radar chart ----------
 function renderScenarios(payload) {
   $('scenarios').innerHTML = payload.scenarios.map((s, i) => `
-    <button class="scenario-card" data-scenario="${i}" style="border: none; background: none; cursor: pointer; padding: 0;">
+    <button class="scenario-card" data-scenario="${i}">
       <div class="scenario-head">
         <div class="scenario-icon">${s.icon}</div>
-        <div class="scenario-name">${s.name}</div>
+        <div>
+          <div class="scenario-codename">${s.codename}</div>
+          <div class="scenario-subtitle">${s.title}</div>
+        </div>
       </div>
       <div class="scenario-radar">${radarSvg(s.radar)}</div>
       <div class="scenario-facts">
@@ -321,13 +405,21 @@ function renderScenarios(payload) {
     </button>
   `).join('');
 
-  // Wire scenario card clicks
+  // Wire scenario card clicks and hover map highlighting
   document.querySelectorAll('.scenario-card').forEach((card) => {
     card.addEventListener('click', () => {
       const idx = +card.dataset.scenario;
       document.querySelectorAll('.scenario-card').forEach((c) => c.classList.remove('selected'));
       card.classList.add('selected');
       selectedScenario = payload.scenarios[idx];
+      renderMap(payload, selectedScenario.partners);
+    });
+    card.addEventListener('mouseenter', () => {
+      const idx = +card.dataset.scenario;
+      renderMap(payload, payload.scenarios[idx].partners);
+    });
+    card.addEventListener('mouseleave', () => {
+      renderMap(payload, selectedScenario ? selectedScenario.partners : null);
     });
   });
 
@@ -336,13 +428,13 @@ function renderScenarios(payload) {
   selectedScenario = payload.scenarios[0];
 }
 
+// ---------- Radar chart (5 axes — compliance dropped) ----------
 function radarSvg(r) {
   const axes = [
     { key: 'cost',           label: 'Cost' },
     { key: 'speed',          label: 'Speed' },
     { key: 'risk',           label: 'Risk' },
     { key: 'sustainability', label: 'Green' },
-    { key: 'compliance',     label: 'Comp.' },
     { key: 'scalability',    label: 'Scale' },
   ];
   const cx = 95, cy = 95, maxR = 68;
@@ -391,78 +483,58 @@ function radarSvg(r) {
   `;
 }
 
-// ----- What-if slider -----
-function renderWhatIf(payload) {
-  const slider = $('whatif-slider');
-  const readout = $('whatif-readout');
-  const result = $('whatif-result');
-
-  const scaleOf = (v) => {
-    if (v < 33)  return { label: 'Bench', unit: 'grams',     qtyText: '100 g – 1 kg', multiplier: 0.12, tier: 'bench' };
-    if (v < 67)  return { label: 'Pilot', unit: 'kilograms', qtyText: '10 kg – 500 kg', multiplier: 1.0,  tier: 'pilot' };
-    return { label: 'Commercial', unit: 'tons', qtyText: '5 t – 1000 t / year', multiplier: 8.6, tier: 'commercial' };
-  };
-
-  const update = () => {
-    const v = +slider.value;
-    const s = scaleOf(v);
-    readout.textContent = `${s.label.toUpperCase()} · ${s.qtyText}`;
-
-    // Pick partners based on scale
-    const allPartners = [...new Set(payload.scenarios.flatMap((sc) => sc.partners))];
-    const scaleFactor = s.tier === 'bench' ? 0.45 : s.tier === 'pilot' ? 0.75 : 1.0;
-    const matching = Math.max(2, Math.round(allPartners.length * scaleFactor));
-    const filtered = allPartners.slice(0, matching);
-
-    const baseCost = payload.scenarios[0]?.costPerKg || '';
-    const dropOut = allPartners.length - matching;
-
-    result.innerHTML = `
-      <div style="display:flex;gap:2rem;flex-wrap:wrap">
-        <div><strong>${matching}</strong> partners match at ${s.label.toLowerCase()} scale
-          ${dropOut > 0 ? `<span class="muted"> · ${dropOut} drop out below MOQ or capability</span>` : ''}
-        </div>
-        <div class="muted">Cost profile shifts: ${s.tier === 'bench'
-            ? 'premium per kg, specialty CDMOs only'
-            : s.tier === 'pilot'
-              ? 'balanced — most partners qualify'
-              : 'economies of scale kick in, commodity sourcing available'}.</div>
-      </div>
-      <div style="margin-top:0.65rem;font-size:0.8rem;color:var(--text-muted)">
-        In network: ${filtered.slice(0, 5).map((p) => p.split(' (')[0]).join(' · ')}${filtered.length > 5 ? ' · …' : ''}
-      </div>`;
-  };
-  slider.oninput = update;
-  update();
-}
-
-// ----- Network map -----
-function renderMap(payload) {
+// ---------- Network map ----------
+function renderMap(payload, highlightedPartners) {
   $('map-caption').textContent = payload.map.caption;
   const mapEl = $('network-map');
 
-  // Connection lines between active tier-1 nodes
   const nodes = payload.map.nodes;
+
+  // Build set of node names to highlight
+  let highlightSet = null;
+  if (highlightedPartners && highlightedPartners.length) {
+    highlightSet = new Set();
+    for (const partner of highlightedPartners) {
+      for (const node of nodes) {
+        if (partner.toLowerCase().includes(node.name.toLowerCase())) {
+          highlightSet.add(node.name);
+        }
+      }
+    }
+  }
+
   const activeT1 = nodes.map((n, i) => ({ ...n, i })).filter((n) => n.active && n.tier === 1);
+
+  // Connection lines between active tier-1 nodes
   let lines = '';
   for (let a = 0; a < activeT1.length; a++) {
     for (let b = a + 1; b < activeT1.length; b++) {
       if (Math.random() < 0.45) {
         const n1 = activeT1[a], n2 = activeT1[b];
+        const highlighted = highlightSet && highlightSet.has(n1.name) && highlightSet.has(n2.name);
+        const strokeColor = highlighted ? 'rgba(94,234,212,0.6)' : 'rgba(94,234,212,0.15)';
+        const strokeWidth = highlighted ? '1.5' : '1';
         lines += `<line x1="${n1.x}%" y1="${n1.y}%" x2="${n2.x}%" y2="${n2.y}%"
-                    stroke="rgba(94,234,212,0.22)" stroke-width="1" stroke-dasharray="4 3"/>`;
+                    stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-dasharray="4 3"/>`;
       }
     }
   }
 
   mapEl.innerHTML = `
     <svg preserveAspectRatio="none">${lines}</svg>
-    ${nodes.map((n) => `
-      <div class="node tier-${n.tier}" style="left:${n.x}%;top:${n.y}%">
-        <div class="node-dot"></div>
-        <div class="node-label">${n.name}</div>
-        <div class="node-role">${n.role}</div>
-      </div>
-    `).join('')}
+    ${nodes.map((n) => {
+      let extraClass = '';
+      if (highlightSet) {
+        extraClass = highlightSet.has(n.name) ? ' node-highlighted' : ' node-dimmed';
+      }
+      if (n.geopoliticalRisk) extraClass += ' node-geo-risk';
+      return `
+        <div class="node tier-${n.tier}${extraClass}" style="left:${n.x}%;top:${n.y}%">
+          <div class="node-dot"></div>
+          <div class="node-label">${n.name}</div>
+          <div class="node-role">${n.role}</div>
+        </div>
+      `;
+    }).join('')}
   `;
 }

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vision — Crucible Lattice</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="vision.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="brand brand-home-btn" aria-label="Return to demo">
+    <div class="brand-mark">
+      <svg viewBox="0 0 40 40" width="32" height="32">
+        <defs>
+          <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#5eead4"/>
+            <stop offset="100%" stop-color="#6366f1"/>
+          </linearGradient>
+        </defs>
+        <polygon points="20,3 35,12 35,28 20,37 5,28 5,12" fill="none" stroke="url(#lg)" stroke-width="2"/>
+        <polygon points="20,11 29,16 29,24 20,29 11,24 11,16" fill="none" stroke="url(#lg)" stroke-width="1.5" opacity="0.6"/>
+        <circle cx="20" cy="20" r="2.5" fill="url(#lg)"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Crucible Lattice</h1>
+      <p class="tagline">Supply-chain intelligence for specialty chemistry</p>
+    </div>
+  </a>
+  <div class="header-meta">
+    <a href="index.html" class="vision-link">← Demo</a>
+  </div>
+</header>
+
+<main class="vision-main">
+
+  <!-- Hero -->
+  <section class="vision-hero">
+    <div class="vision-hero-inner">
+      <div class="vision-eyebrow">Product Vision</div>
+      <h2 class="vision-headline">From structure to supply chain, in seconds.</h2>
+      <p class="vision-lede">A chemist submits a molecule. Crucible Lattice returns a Pareto-optimal set of manufacturing options — scored across cost, speed, risk, and sustainability, filtered through the regulatory surface that use case actually faces, drawn from a live graph of 2,413 qualified partners.</p>
+      <a href="index.html" class="cta-btn">Run the demo <span class="cta-arrow">→</span></a>
+    </div>
+    <div class="vision-hero-graphic">
+      <div class="hero-lattice">
+        <svg viewBox="0 0 400 320" width="100%" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="vg1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#5eead4" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#818cf8" stop-opacity="0.6"/>
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- Node connections -->
+          <line x1="80"  y1="160" x2="160" y2="100" stroke="rgba(94,234,212,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="80"  y1="160" x2="170" y2="220" stroke="rgba(94,234,212,0.2)"  stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="160" y1="100" x2="260" y2="80"  stroke="rgba(129,140,248,0.3)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="160" y1="100" x2="250" y2="160" stroke="rgba(94,234,212,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="170" y1="220" x2="250" y2="160" stroke="rgba(94,234,212,0.2)"  stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="170" y1="220" x2="260" y2="260" stroke="rgba(129,140,248,0.2)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="250" y1="160" x2="340" y2="130" stroke="rgba(94,234,212,0.3)"  stroke-width="1.5" stroke-dasharray="4 3"/>
+          <line x1="260" y1="80"  x2="340" y2="130" stroke="rgba(129,140,248,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+          <!-- Nodes -->
+          <circle cx="80"  cy="160" r="6" fill="none" stroke="#5eead4" stroke-width="1.5" filter="url(#glow)"/>
+          <circle cx="160" cy="100" r="8" fill="none" stroke="#5eead4" stroke-width="2" filter="url(#glow)"/>
+          <circle cx="170" cy="220" r="6" fill="none" stroke="#818cf8" stroke-width="1.5" filter="url(#glow)"/>
+          <circle cx="260" cy="80"  r="5" fill="none" stroke="#818cf8" stroke-width="1.5"/>
+          <circle cx="250" cy="160" r="9" fill="none" stroke="#5eead4" stroke-width="2" filter="url(#glow)"/>
+          <circle cx="260" cy="260" r="4" fill="none" stroke="#6a7a96" stroke-width="1" opacity="0.5"/>
+          <circle cx="340" cy="130" r="7" fill="none" stroke="#5eead4" stroke-width="2" filter="url(#glow)"/>
+          <!-- Highlighted path -->
+          <line x1="80" y1="160" x2="250" y2="160" stroke="url(#vg1)" stroke-width="2"/>
+          <line x1="250" y1="160" x2="340" y2="130" stroke="url(#vg1)" stroke-width="2"/>
+          <!-- Labels -->
+          <text x="60"  y="180" fill="#5eead4" font-size="9" font-family="system-ui" opacity="0.8">Feedstock</text>
+          <text x="140" y="88"  fill="#5eead4" font-size="9" font-family="system-ui" opacity="0.8">Synthesis</text>
+          <text x="148" y="240" fill="#818cf8" font-size="9" font-family="system-ui" opacity="0.8">QC Lab</text>
+          <text x="228" y="78"  fill="#818cf8" font-size="9" font-family="system-ui" opacity="0.8">Logistics</text>
+          <text x="224" y="178" fill="#5eead4" font-size="9" font-family="system-ui" opacity="0.9">CDMO</text>
+          <text x="318" y="148" fill="#5eead4" font-size="9" font-family="system-ui" opacity="0.8">Delivery</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Three pillars -->
+  <section class="vision-pillars">
+    <div class="pillar">
+      <div class="pillar-num">01</div>
+      <h3>A capability graph, not a directory.</h3>
+      <p>Every partner in the network is indexed by what they can actually make — tooling, certifications, scale bands, regulatory coverage. Matching is structural, not keyword-based. Morgan fingerprints against partner capability vectors, not free-text search.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">02</div>
+      <h3>AI-native retrosynthesis and optimization.</h3>
+      <p>The system proposes alternative routes when the submitted structure is suboptimal — lower yield, REACH-flagged solvents, higher E-factor. Optimization potential surfaces alongside raw feasibility, not as an afterthought.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">03</div>
+      <h3>A learning flywheel.</h3>
+      <p>Every transaction tightens the cost, lead-time, and risk estimates for the next one. The lattice gets faster, cheaper, and more accurate the more it runs. This is a structural advantage that compounds — not a feature competitors can copy in a quarter.</p>
+    </div>
+  </section>
+
+  <!-- What's different -->
+  <section class="vision-diff">
+    <div class="vision-diff-inner">
+      <div class="vision-diff-label">What's different</div>
+      <h3>Specialty chemistry procurement today is months. We compress it to hours.</h3>
+      <p>A relationship-based, manual procurement process takes weeks of emails and calls before a single quote arrives. Crucible Lattice runs the analysis in seconds — simultaneously enforcing ITAR gates, REACH compliance, genotoxic-impurity screens, and Pareto-optimal partner selection across a network too large for any one person to hold in their head.</p>
+      <div class="vision-diff-stats">
+        <div class="diff-stat">
+          <div class="diff-stat-num">2,413</div>
+          <div class="diff-stat-lbl">Qualified partners in capability graph</div>
+        </div>
+        <div class="diff-stat">
+          <div class="diff-stat-num">&lt;5s</div>
+          <div class="diff-stat-lbl">From SMILES input to full Pareto analysis</div>
+        </div>
+        <div class="diff-stat">
+          <div class="diff-stat-num">−56%</div>
+          <div class="diff-stat-lbl">Median cost reduction vs. incumbent route (drug example)</div>
+        </div>
+        <div class="diff-stat">
+          <div class="diff-stat-num">97.4%</div>
+          <div class="diff-stat-lbl">On-time handoff rate across lattice transactions</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Long arc -->
+  <section class="vision-arc">
+    <div class="vision-arc-inner">
+      <h3>The long arc</h3>
+      <p>A single source of truth for how specialty compounds get made — and a network effect that makes every subsequent transaction cheaper, faster, and safer than the last.</p>
+      <a href="index.html" class="cta-btn" style="margin-top: 1.5rem; display: inline-flex;">
+        Run the demo <span class="cta-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>

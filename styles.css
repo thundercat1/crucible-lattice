@@ -63,6 +63,14 @@ body {
   position: sticky; top: 0; z-index: 50;
 }
 .brand { display: flex; align-items: center; gap: 0.9rem; }
+.brand-home-btn {
+  display: flex; align-items: center; gap: 0.9rem;
+  background: none; border: none; cursor: pointer; color: inherit;
+  font-family: inherit; padding: 0; text-align: left;
+  border-radius: var(--radius-sm);
+  transition: opacity 0.15s;
+}
+.brand-home-btn:hover { opacity: 0.82; }
 .brand-mark {
   filter: drop-shadow(0 0 8px rgba(94, 234, 212, 0.35));
   animation: slow-spin 20s linear infinite;
@@ -82,6 +90,15 @@ body {
   display: flex; align-items: center; gap: 0.5rem;
   font-size: 0.78rem; color: var(--text-dim);
 }
+.vision-link {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  transition: color 0.15s;
+}
+.vision-link:hover { color: var(--cyan); }
+.header-sep { color: var(--border-strong); }
 .live-dot {
   width: 8px; height: 8px; border-radius: 50%;
   background: var(--cyan);
@@ -443,14 +460,36 @@ main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
   padding: 1.75rem;
 }
 .molecule-render {
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(7, 9, 15, 0.85);
   border-radius: var(--radius-sm);
   min-height: 260px;
   display: flex; align-items: center; justify-content: center;
   padding: 1rem;
-  box-shadow: inset 0 0 0 1px var(--border-strong);
+  border: 1px solid rgba(94, 234, 212, 0.25);
+  box-shadow: 0 0 32px rgba(94, 234, 212, 0.08), inset 0 0 0 1px rgba(94, 234, 212, 0.12);
+  position: relative;
+  overflow: hidden;
 }
-.molecule-render svg { max-width: 100%; height: auto; }
+.molecule-render::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 3px,
+    rgba(94, 234, 212, 0.02) 3px,
+    rgba(94, 234, 212, 0.02) 4px
+  );
+  pointer-events: none;
+}
+.mol-svg-wrap {
+  position: relative;
+  z-index: 1;
+  animation: mol-fade-in 0.6s ease;
+}
+@keyframes mol-fade-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
+.mol-svg-wrap svg { max-width: 100%; height: auto; display: block; }
 .render-placeholder { color: #6a7a96; font-size: 0.85rem; }
 
 .tag-row { display: flex; gap: 0.5rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
@@ -568,10 +607,10 @@ main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
 }
 .opt-cta:hover { transform: translateY(-1px); }
 
-/* Compliance grid */
+/* Compliance grid (2 cols — regulatory + hazard; purity is its own section) */
 .compliance-grid {
   display: grid;
-  grid-template-columns: 1.2fr 1fr 1.3fr;
+  grid-template-columns: 1.2fr 1fr;
   gap: 1rem;
   margin-bottom: 1.25rem;
 }
@@ -623,6 +662,166 @@ main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
 .purity-table tr:last-child td { border-bottom: none; }
 .purity-scale { font-weight: 600; color: var(--text); }
 .purity-method { font-size: 0.78rem; color: var(--text-muted); }
+
+/* Purity escalation ladder cards */
+.purity-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 2rem;
+}
+.purity-card {
+  background: rgba(19, 25, 38, 0.6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+  display: flex; flex-direction: column; gap: 0.45rem;
+  position: relative; overflow: hidden;
+}
+.purity-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--indigo), var(--cyan));
+  opacity: 0; transition: opacity 0.2s;
+}
+.purity-card:hover { border-color: var(--indigo); box-shadow: var(--glow-indigo); }
+.purity-card:hover::before { opacity: 1; }
+.purity-card.selected {
+  border-color: var(--indigo);
+  background: rgba(129, 140, 248, 0.07);
+  box-shadow: var(--glow-indigo);
+}
+.purity-card.selected::before { opacity: 1; }
+.purity-card-scale {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--indigo);
+}
+.purity-card-target {
+  font-size: 1rem;
+  font-weight: 650;
+  color: var(--text);
+  font-family: ui-monospace, Menlo, monospace;
+}
+.purity-card-method {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Geopolitical disruption banner */
+.geopolitical-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.1rem 1.4rem;
+  border-radius: var(--radius);
+  margin-bottom: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+.geopolitical-alert.geo-warning {
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.08), rgba(251, 191, 36, 0.06));
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+.geopolitical-alert.geo-warning::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--red), var(--amber));
+}
+.geopolitical-alert.geo-clear {
+  background: linear-gradient(135deg, rgba(94, 234, 212, 0.06), rgba(74, 222, 128, 0.05));
+  border: 1px solid rgba(94, 234, 212, 0.25);
+}
+.geopolitical-alert.geo-clear::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--green));
+}
+.geo-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.geo-warning .geo-icon { color: var(--red); }
+.geo-clear .geo-icon { color: var(--cyan); }
+.geo-content { flex: 1; display: flex; flex-direction: column; gap: 0.3rem; }
+.geo-event {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.geo-warning .geo-event { color: var(--red); }
+.geo-clear .geo-event { color: var(--cyan); }
+.geo-impact { font-size: 0.85rem; color: var(--text); }
+.geo-reroute {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  border-left: 2px solid var(--cyan);
+  padding-left: 0.6rem;
+  margin-top: 0.2rem;
+}
+.geo-badge {
+  align-self: flex-start;
+  flex-shrink: 0;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 99px;
+}
+.geo-warning .geo-badge {
+  background: rgba(248, 113, 113, 0.15);
+  color: var(--red);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+.geo-clear .geo-badge {
+  background: rgba(94, 234, 212, 0.12);
+  color: var(--cyan);
+  border: 1px solid rgba(94, 234, 212, 0.25);
+}
+
+/* Optimization categories */
+.opt-categories { margin: 0.75rem 0; }
+.opt-cat-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.opt-cat-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.opt-cat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.76rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 99px;
+  border: 1px solid;
+}
+.opt-cat-item.found {
+  background: rgba(74, 222, 128, 0.08);
+  border-color: rgba(74, 222, 128, 0.3);
+  color: var(--green);
+}
+.opt-cat-item.empty {
+  background: rgba(43, 58, 88, 0.3);
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+.opt-cat-icon { font-size: 0.72rem; font-weight: 700; }
 
 /* Scenarios */
 .scenarios {
@@ -677,7 +876,8 @@ main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
   color: var(--cyan);
   font-weight: 600;
 }
-.scenario-name { font-size: 1rem; font-weight: 600; }
+.scenario-codename { font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+.scenario-subtitle { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.1rem; }
 
 .scenario-radar { margin: 0.4rem 0 0.8rem; display: flex; justify-content: center; }
 .scenario-radar svg { overflow: visible; }
@@ -785,9 +985,10 @@ main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
 .whatif-result strong { color: var(--text); }
 
 /* Network map */
+.network-panel { margin-bottom: 1.25rem; }
 .network-map {
   position: relative;
-  height: 340px;
+  height: 460px;
   background:
     radial-gradient(ellipse at center, rgba(99, 102, 241, 0.05), transparent 70%),
     repeating-linear-gradient(0deg, transparent 0, transparent 40px, rgba(43, 58, 88, 0.25) 40px, rgba(43, 58, 88, 0.25) 41px),
@@ -817,6 +1018,20 @@ main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
 .node.tier-2 .node-dot { border-color: var(--indigo); box-shadow: 0 0 14px rgba(129, 140, 248, 0.4); }
 .node.tier-3 .node-dot { border-color: var(--text-muted); opacity: 0.5; }
 .node.tier-3 { opacity: 0.5; }
+.node.node-highlighted .node-dot {
+  transform: scale(1.5);
+  box-shadow: 0 0 20px rgba(94, 234, 212, 0.8);
+}
+.node.node-dimmed { opacity: 0.25; }
+.node.node-geo-risk .node-dot {
+  border-color: var(--red);
+  box-shadow: 0 0 14px rgba(248, 113, 113, 0.6);
+  animation: geo-pulse 2s ease-in-out infinite;
+}
+@keyframes geo-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(248, 113, 113, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(248, 113, 113, 0.9); }
+}
 .node-label {
   font-size: 0.72rem;
   margin-top: 0.35rem;
@@ -851,6 +1066,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
 .legend-dot.tier-1 { border-color: var(--cyan); }
 .legend-dot.tier-2 { border-color: var(--indigo); }
 .legend-dot.tier-3 { border-color: var(--text-muted); opacity: 0.5; }
+.legend-dot.geo-risk { border-color: var(--red); }
 
 /* Flywheel */
 .flywheel-panel {
@@ -943,7 +1159,8 @@ main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
   margin-bottom: 1.5rem;
 }
 .exec-mol-render {
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(7, 9, 15, 0.85);
+  border: 1px solid rgba(94, 234, 212, 0.2);
   border-radius: var(--radius-sm);
   height: 180px;
   display: flex; align-items: center; justify-content: center;
@@ -1038,7 +1255,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
   font-size: 0.8rem;
   color: var(--text-dim);
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: 1fr 160px 140px;
   gap: 1.5rem;
   margin-top: 0.5rem;
 }
