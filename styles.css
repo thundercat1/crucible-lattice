@@ -1225,13 +1225,17 @@ main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
   z-index: 1;
 }
 .exec-step.done .exec-step-dot {
-  background: rgba(74, 222, 128, 0.15);
+  background: linear-gradient(rgba(74, 222, 128, 0.15), rgba(74, 222, 128, 0.15)), var(--bg-0);
   border-color: var(--green);
   color: var(--green);
+  font-size: 0;
 }
-.exec-step.done .exec-step-dot::before { content: '✓'; }
+.exec-step.done .exec-step-dot::before {
+  content: '✓';
+  font-size: 0.85rem;
+}
 .exec-step.active .exec-step-dot {
-  background: rgba(94, 234, 212, 0.15);
+  background: linear-gradient(rgba(94, 234, 212, 0.15), rgba(94, 234, 212, 0.15)), var(--bg-0);
   border-color: var(--cyan);
   color: var(--cyan);
   box-shadow: 0 0 12px rgba(94, 234, 212, 0.6);
@@ -1275,6 +1279,66 @@ main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
   color: var(--text);
   font-weight: 600;
 }
+
+.exec-step-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+.exec-step-cta {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.exec-step-cta-primary {
+  background: linear-gradient(135deg, var(--cyan-dim), var(--indigo));
+  color: #07090f;
+  border: none;
+  box-shadow: 0 4px 16px rgba(94, 234, 212, 0.25);
+}
+.exec-step-cta-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(94, 234, 212, 0.4);
+}
+.exec-step-cta-secondary {
+  background: transparent;
+  color: var(--cyan);
+  border: 1px solid rgba(94, 234, 212, 0.5);
+}
+.exec-step-cta-secondary:hover {
+  background: rgba(94, 234, 212, 0.08);
+  border-color: var(--cyan);
+}
+.exec-step-cta .cta-arrow { font-size: 0.95rem; transition: transform 0.2s; }
+.exec-step-cta:hover .cta-arrow { transform: translateX(2px); }
+
+.exec-timeline-divider {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem 0 1rem 0;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+}
+.exec-timeline-divider::before,
+.exec-timeline-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.exec-timeline-divider span { white-space: nowrap; flex-shrink: 0; }
 
 .exec-team-card {
   display: grid;

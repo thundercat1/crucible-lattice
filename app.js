@@ -125,16 +125,21 @@ function renderExecution(scenario) {
 
   // Timeline
   const timeline = [
-    { title: 'Request manufacturing brief', detail: 'Full cGMP audit, capacity confirmation, lead-time validation', owner: 'Crucible', timeline: 'Day 1', status: 'done' },
-    { title: 'Select & negotiate with lead partner', detail: `Contracting, NDA, tech specs to ${scenario.partners[0] || 'lead partner'}`, owner: 'Crucible + partner', timeline: scenario.leadTime.split('–')[0] || 'Week 1–2', status: 'active' },
-    { title: 'Technical transfer & process validation', detail: 'Lab demo, scale-up feasibility, constraint confirmation', owner: scenario.partners[0] || 'Partner', timeline: '2–3 weeks', status: 'pending' },
-    { title: 'Tooling & process optimization', detail: 'Equipment setup, parameter tuning, batch sizing', owner: scenario.partners[0] || 'Partner', timeline: '3–4 weeks', status: 'pending' },
-    { title: 'Manufacturing run', detail: 'Full-scale production, real-time monitoring', owner: scenario.partners[0] || 'Partner', timeline: 'Variable', status: 'pending' },
-    { title: 'QC release & final testing', detail: 'COA generation, analytical validation, regulatory sign-off', owner: 'QC Lab', timeline: '1–2 weeks', status: 'pending' },
-    { title: 'Delivery & handoff', detail: 'Logistics, documentation, supply-chain closure', owner: 'Crucible logistics', timeline: 'On-spec delivery rate: 96.8%', status: 'pending' },
+    { title: 'Shortlist & scenario analysis', detail: 'Partner graph screened, capability-matched, and Pareto-modeled across scenarios. Optimization findings and geopolitical risk screen complete.', owner: 'Crucible', timeline: '4 hrs (vs. 6–14 weeks manual RFQ)', status: 'done' },
+    { title: 'Sign-off & program kickoff', detail: `Customer confirms ${scenario.codename || 'scenario'} selection, executes MSA, and aligns on specifications and delivery milestones.`, owner: 'Customer', timeline: '1–3 business days', status: 'active', ctas: [
+      { label: 'Authorize program & launch', variant: 'primary' },
+      { label: 'Export RFQ & partner brief', variant: 'secondary' },
+    ] },
+    { title: 'Select & negotiate with lead partner', detail: `Contracting, NDA, and tech specs executed to ${scenario.partners[0] || 'lead partner'}`, owner: 'Crucible', timeline: '3–5 business days', status: 'pending' },
+    { title: 'Technical transfer & process validation', detail: 'Lab demo, scale-up feasibility, constraint confirmation. Milestone status reported to Crucible dashboard.', owner: scenario.partners[0] || 'Partner', timeline: '2–3 weeks', status: 'pending', divider: true },
+    { title: 'Tooling & process optimization', detail: 'Equipment setup, parameter tuning, batch sizing. Yield and cycle-time actuals logged to network model.', owner: scenario.partners[0] || 'Partner', timeline: '3–4 weeks', status: 'pending' },
+    { title: 'Manufacturing run', detail: 'Full-scale production. Batch status, yield, and lead-time actuals stream to Crucible dashboard in real time.', owner: scenario.partners[0] || 'Partner', timeline: scenario.leadTime, status: 'pending' },
+    { title: 'QC release & final testing', detail: 'COA ingested to Crucible platform; analytical validation and regulatory sign-off tracked to release.', owner: 'QC Lab', timeline: '1–2 weeks', status: 'pending' },
+    { title: 'Delivery & handoff', detail: 'Logistics, documentation, supply-chain closure. Execution actuals update cost and lead-time estimates across the partner network.', owner: 'Crucible logistics', timeline: 'On-spec delivery rate: 96.8%', status: 'pending' },
   ];
 
   $('execution-timeline').innerHTML = timeline.map((step, i) => `
+    ${step.divider ? '<li class="exec-timeline-divider"><span>Partner execution — monitored via Crucible dashboard</span></li>' : ''}
     <li class="exec-step ${step.status}">
       <div class="exec-step-dot">${i + 1}</div>
       <div class="exec-step-content">
@@ -153,6 +158,11 @@ function renderExecution(scenario) {
             <span class="exec-step-detail-value">${step.timeline}</span>
           </div>
         </div>
+        ${step.ctas ? `
+          <div class="exec-step-ctas">
+            ${step.ctas.map(c => `<button type="button" class="exec-step-cta exec-step-cta-${c.variant}">${c.label}<span class="cta-arrow">→</span></button>`).join('')}
+          </div>
+        ` : ''}
       </div>
     </li>
   `).join('');
